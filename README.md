@@ -1,5 +1,5 @@
-# iFilmo-Chat
-ifilmo chat room
+# Nodejs-Chat
+nodejs chat room
 
 ### 安装rabbitmq
 
