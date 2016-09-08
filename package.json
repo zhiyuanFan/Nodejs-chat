@@ -1,0 +1,41 @@
+{
+  "name": "ifilmo-chat",
+  "version": "1.0.0",
+  "description": "ifilmo chat room.",
+  "main": "index.js",
+  "scripts": {
+    "test": "run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iFilmo/iFilmo-Chat.git"
+  },
+  "keywords": [
+    "ifilmo",
+    "chat",
+    "websocket",
+    "socket.io"
+  ],
+  "author": "krew",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/iFilmo/iFilmo-Chat/issues"
+  },
+  "homepage": "https://github.com/iFilmo/iFilmo-Chat#readme",
+  "dependencies": {
+    "amqplib": "^0.4.1",
+    "bluebird": "^3.4.0",
+    "body-parser": "^1.15.1",
+    "colors": "^1.1.2",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.7.1",
+    "ejs": "^2.4.2",
+    "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "mysql": "^2.10.2",
+    "ramda": "^0.21.0",
+    "redis": "^2.6.0-2",
+    "request": "^2.72.0",
+    "socket.io": "^1.4.6"
+  }
+}

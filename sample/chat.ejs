@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scoket Test</title>
+  <script src="http://7xsquz.com1.z0.glb.clouddn.com/jquery-1.9.1.min.js"></script>
+  <script src="http://7xsquz.com1.z0.glb.clouddn.com/js.cookie.js"></script>
+  <script src="http://7xsquz.com1.z0.glb.clouddn.com/socket.io-1.4.5.js"></script>
+  <style>
+  ul{list-style: none;}
+  li{cursor: pointer;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="left" style="width:70%;float: left;">
+      <p>状态:<span id="status"></span>&nbsp;&nbsp;&nbsp;<span style="color: red;font-size: 12px;">您有<b id="tip" style="cursor: pointer;text-decoration: underline;"></b>个未读会话。</span></p>
+      <p>openId: <span id="openid"></span></p>
+      <p>selfId: <span id="userid"></span></p>
+      <p>target: <input type="text" id="ReceiveId"></p>
+      <div id="history">
+
+      </div>
+      <form action="" id="chatroom">
+        <input type="text" id="content">
+        <input type="submit">
+      </form>
+    </div>
+    <div class="right" style="width:25%;float: right;">
+      <ul id="list">
+      </ul>
+    </div>
+  </div>
+  <script>
+    var socket = io('http://<%=ip%>:8080');
+    var nowcount = 1;
+    socket.on('connect',function(){
+
+      socket.emit('online',{
+        'uid': Cookies.get('uid'),
+        'platform' : 'pc'
+      });
+
+      socket.on('onlineList',function(data){
+        $('#list').html('');
+        for(var list in data){
+          $('#list').append('<li>'+list+'</li>')
+        }
+      })
+
+      document.getElementById('status').innerHTML = '已连接';
+      document.getElementById('userid').innerHTML = socket.id;
+
+      socket.on('message',function(data){
+        $('#history').append('<p><span class="sender">'+ (data.sendUid == Cookies.get('uid')?'我':data.sendUid )+ '</span> : ' + data.content+'</p>')
+      })
+      socket.on('warn',function(data){
+        $('#history').append('<p><span>'+nowcount+': </span>'+ data +'</p>');
+        nowcount++;
+      })
+      socket.on('time',function(data){
+        document.getElementById('timestamp').innerHTML = data;
+      })
+    })
+    socket.on('disconnect',function(){
+      document.getElementById('status').innerHTML = '已断开'
+    })
+
+    $(function(){
+
+      $.get('/api/allunread/' + Cookies.get('uid'),function(data){
+        $('#tip').text(data.total);
+      })
+
+      $('#list').on('click','li',function(){
+        $('#ReceiveId').val($(this).text());
+      })
+
+      $('#openid').text(Cookies.get('uid'));
+
+      $('#chatroom').submit(function(){
+        socket.emit('message',{
+          'receiveUid':$('#ReceiveId').val(),
+          'platform' : 'pc',
+          'orderNo': '20160608104330000001',
+          'sendUid' : Cookies.get('uid'),
+          'content':$('#content').val(),
+          'type' : '1',
+          'url': 'xxxx'
+        });
+        $('#history').append('<p><span>我 : </span>'+$('#content').val()+'</p>');
+        $('#content').val('');
+        return false;
+      })
+
+      $('#history').on('click','.sender',function(){
+        $('#ReceiveId').val($(this).text());
+      })
+    })
+  </script>
+</body>
+</html>
